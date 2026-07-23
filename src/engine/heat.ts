@@ -6,12 +6,15 @@ export const AMBIENT_C = 20;
 /** Above this, the workpiece is overheating and starts to burn/oxidize. */
 export const BURN_C = 1500;
 
+/** Below this (black heat), the metal is too cold to shape at all. */
+export const WORKABLE_MIN_C = 550;
+
 /**
  * Ordered low-to-high heat bands, matching real smith heat-judging colors.
  * Below the first band's `minC` (black heat) the metal is too cold to work.
  */
 export const HEAT_BANDS: readonly HeatBand[] = [
-  { color: 'red', minC: 550, maxC: 900 },
+  { color: 'red', minC: WORKABLE_MIN_C, maxC: 900 },
   { color: 'orange', minC: 900, maxC: 1050 },
   { color: 'yellow', minC: 1050, maxC: 1250 },
   { color: 'white', minC: 1250, maxC: BURN_C },
@@ -28,8 +31,7 @@ export function heatColorFor(temperatureC: number): HeatColor {
 
 /** Whether the metal is hot enough to be shaped at all (above black heat). */
 export function isWorkable(temperatureC: number): boolean {
-  const firstBand = HEAT_BANDS[0];
-  return firstBand !== undefined && temperatureC >= firstBand.minC;
+  return temperatureC >= WORKABLE_MIN_C;
 }
 
 /** Whether the metal has overheated to the point of burning/ruin. */
