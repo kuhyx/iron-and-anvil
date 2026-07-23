@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { createRealClock, createManualClock } from '../../src/engine/clock';
+import { createRealClock, createManualClock, realClock } from '../../src/engine/clock';
 
 describe('createRealClock', () => {
   it('reports a non-negative, monotonic-ish time', () => {
@@ -8,6 +8,12 @@ describe('createRealClock', () => {
     const second = clock.now();
     expect(first).toBeGreaterThanOrEqual(0);
     expect(second).toBeGreaterThanOrEqual(first);
+  });
+});
+
+describe('realClock', () => {
+  it('is a usable shared Clock instance', () => {
+    expect(realClock.now()).toBeGreaterThanOrEqual(0);
   });
 });
 

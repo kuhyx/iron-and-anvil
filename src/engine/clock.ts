@@ -18,6 +18,14 @@ export function createRealClock(): Clock {
   };
 }
 
+/**
+ * The one real clock instance UI code should pass around. A single shared
+ * instance (rather than calling {@link createRealClock} per component) keeps
+ * its identity stable across renders, which matters for hooks that depend on
+ * it (e.g. `useForgeLoop`'s effect dependency array).
+ */
+export const realClock: Clock = createRealClock();
+
 /** A {@link Clock} test double whose time only moves when told to. */
 export interface ManualClock extends Clock {
   /** Moves the clock forward by the given number of milliseconds. */
