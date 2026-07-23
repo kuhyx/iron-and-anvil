@@ -1,0 +1,44 @@
+# Mirrors the local gate exactly, so green-local means green-CI:
+#   npm run lint      -> eslint .
+#   npm run typecheck -> tsc --noEmit
+#   npm run test:cov  -> vitest, which fails below 100% coverage
+#   npm run build     -> tsc --noEmit && vite build
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: npm
+          node-version: 24
+
+      # --ci: fails on a lockfile that does not match package.json rather
+      # than silently resolving something else.
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Shellcheck install.sh and run.sh
+        run: shellcheck install.sh run.sh
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Tests + 100% coverage
+        run: npm run test:cov
+
+      - name: Build
+        run: npm run build
