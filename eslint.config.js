@@ -50,6 +50,9 @@ export default tseslint.config(
           message: 'Use the injected Clock (src/engine/clock.ts) so timing is deterministic and testable.',
         },
       ],
+      // Keep the stricter no-non-null-assertion rule; allow narrowing `as T`
+      // casts on provably-safe access instead of forcing `!` everywhere.
+      '@typescript-eslint/non-nullable-type-assertion-style': 'off',
     },
   },
   {
