@@ -49,10 +49,11 @@ function drawSilhouette(context: CanvasRenderingContext2D, profile: readonly num
 
 export interface ShapeSculptScreenProperties {
   readonly onFinish?: (workpiece: Workpiece) => void;
+  readonly onBackToMenu?: () => void;
   readonly clock?: Clock;
 }
 
-export function ShapeSculptScreen({ onFinish, clock = realClock }: ShapeSculptScreenProperties) {
+export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }: ShapeSculptScreenProperties) {
   const canvasReference = useRef<HTMLCanvasElement | null>(null);
   const [state, setState] = useState<SculptState>(startingState);
   const [fueling, setFueling] = useState(false);
@@ -207,6 +208,11 @@ export function ShapeSculptScreen({ onFinish, clock = realClock }: ShapeSculptSc
           <button type="button" onClick={retry}>
             Try Again
           </button>
+          {onBackToMenu && (
+            <button type="button" onClick={onBackToMenu}>
+              Back to Menu
+            </button>
+          )}
         </div>
       )}
     </section>

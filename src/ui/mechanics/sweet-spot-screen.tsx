@@ -30,10 +30,11 @@ function startingWorkpiece(): Workpiece {
 
 export interface SweetSpotScreenProperties {
   readonly onFinish?: (workpiece: Workpiece) => void;
+  readonly onBackToMenu?: () => void;
   readonly clock?: Clock;
 }
 
-export function SweetSpotScreen({ onFinish, clock = realClock }: SweetSpotScreenProperties) {
+export function SweetSpotScreen({ onFinish, onBackToMenu, clock = realClock }: SweetSpotScreenProperties) {
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
   const [needleOffset, setNeedleOffset] = useState(0);
   const [fueling, setFueling] = useState(false);
@@ -155,6 +156,11 @@ export function SweetSpotScreen({ onFinish, clock = realClock }: SweetSpotScreen
           <button type="button" onClick={retry}>
             Try Again
           </button>
+          {onBackToMenu && (
+            <button type="button" onClick={onBackToMenu}>
+              Back to Menu
+            </button>
+          )}
         </div>
       )}
     </section>

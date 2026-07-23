@@ -122,6 +122,20 @@ describe('ShapeSculptScreen', () => {
     expect(onFinish).toHaveBeenCalledTimes(1);
   });
 
+  it('offers a Back to Menu action only when a handler is provided', () => {
+    const onBackToMenu = vi.fn();
+    render(<ShapeSculptScreen clock={createManualClock()} onBackToMenu={onBackToMenu} />);
+
+    for (let segmentIndex = 0; segmentIndex < SEGMENT_COUNT; segmentIndex += 1) {
+      for (let strokeCount = 0; strokeCount < 10; strokeCount += 1) {
+        strokeAt(segmentIndex);
+      }
+    }
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Menu' }));
+    expect(onBackToMenu).toHaveBeenCalledTimes(1);
+  });
+
   it('skips the heat update when a tick reports no elapsed time', () => {
     const clock = createManualClock();
     render(<ShapeSculptScreen clock={clock} />);

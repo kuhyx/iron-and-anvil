@@ -19,9 +19,10 @@ function startingWorkpiece(): Workpiece {
 
 export interface TurnResolutionScreenProperties {
   readonly onFinish?: (workpiece: Workpiece) => void;
+  readonly onBackToMenu?: () => void;
 }
 
-export function TurnResolutionScreen({ onFinish }: TurnResolutionScreenProperties) {
+export function TurnResolutionScreen({ onFinish, onBackToMenu }: TurnResolutionScreenProperties) {
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
   const reportedReference = useRef(false);
 
@@ -77,6 +78,11 @@ export function TurnResolutionScreen({ onFinish }: TurnResolutionScreenPropertie
           <button type="button" onClick={retry}>
             Try Again
           </button>
+          {onBackToMenu && (
+            <button type="button" onClick={onBackToMenu}>
+              Back to Menu
+            </button>
+          )}
         </div>
       )}
     </section>

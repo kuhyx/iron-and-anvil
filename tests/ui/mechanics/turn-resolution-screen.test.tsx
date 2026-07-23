@@ -54,6 +54,23 @@ describe('TurnResolutionScreen', () => {
     expect(onFinish).toHaveBeenCalledTimes(1);
   });
 
+  it('offers a Back to Menu action only when a handler is provided', () => {
+    const onBackToMenu = vi.fn();
+    render(<TurnResolutionScreen onBackToMenu={onBackToMenu} />);
+
+    for (let turn = 0; turn < 40; turn += 1) {
+      const action = turn % 2 === 0 ? 'Heat' : 'Strike';
+      const button = screen.queryByRole('button', { name: action });
+      if (!button) {
+        break;
+      }
+      fireEvent.click(button);
+    }
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Menu' }));
+    expect(onBackToMenu).toHaveBeenCalledTimes(1);
+  });
+
   it('resets to the starting state on Try Again', () => {
     render(<TurnResolutionScreen />);
 

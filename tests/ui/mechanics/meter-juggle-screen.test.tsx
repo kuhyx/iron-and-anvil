@@ -75,6 +75,22 @@ describe('MeterJuggleScreen', () => {
     expect(onFinish).toHaveBeenCalledTimes(1);
   });
 
+  it('offers a Back to Menu action only when a handler is provided', () => {
+    const onBackToMenu = vi.fn();
+    render(<MeterJuggleScreen clock={createManualClock()} onBackToMenu={onBackToMenu} />);
+
+    for (let tap = 0; tap < 15; tap += 1) {
+      const hammerButton = screen.queryByRole('button', { name: 'Hammer' });
+      if (!hammerButton) {
+        break;
+      }
+      fireEvent.click(hammerButton);
+    }
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Menu' }));
+    expect(onBackToMenu).toHaveBeenCalledTimes(1);
+  });
+
   it('reaches a ruined result once stress is left unattended long enough', () => {
     const clock = createManualClock();
     render(<MeterJuggleScreen clock={clock} />);

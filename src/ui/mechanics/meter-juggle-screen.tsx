@@ -18,10 +18,11 @@ function startingWorkpiece(): Workpiece {
 
 export interface MeterJuggleScreenProperties {
   readonly onFinish?: (workpiece: Workpiece) => void;
+  readonly onBackToMenu?: () => void;
   readonly clock?: Clock;
 }
 
-export function MeterJuggleScreen({ onFinish, clock = realClock }: MeterJuggleScreenProperties) {
+export function MeterJuggleScreen({ onFinish, onBackToMenu, clock = realClock }: MeterJuggleScreenProperties) {
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
   const [fueling, setFueling] = useState(false);
   const lastElapsedReference = useRef(0);
@@ -119,6 +120,11 @@ export function MeterJuggleScreen({ onFinish, clock = realClock }: MeterJuggleSc
           <button type="button" onClick={retry}>
             Try Again
           </button>
+          {onBackToMenu && (
+            <button type="button" onClick={onBackToMenu}>
+              Back to Menu
+            </button>
+          )}
         </div>
       )}
     </section>

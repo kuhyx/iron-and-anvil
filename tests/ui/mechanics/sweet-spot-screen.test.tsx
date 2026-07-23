@@ -64,6 +64,22 @@ describe('SweetSpotScreen', () => {
     expect(onFinish.mock.calls[0]?.[0]).toMatchObject({ shapeProgress: 100 });
   });
 
+  it('offers a Back to Menu action only when a handler is provided', () => {
+    const clock = createManualClock();
+    const onBackToMenu = vi.fn();
+    render(<SweetSpotScreen clock={clock} onBackToMenu={onBackToMenu} />);
+
+    fireEvent.pointerDown(screen.getByRole('button', { name: /Fuel/ }));
+    for (let strikeIndex = 0; strikeIndex < 7; strikeIndex += 1) {
+      clock.set(PERFECT_ELAPSED + strikeIndex * PERIOD_MS);
+      flushTick();
+      fireEvent.click(screen.getByRole('button', { name: 'Strike' }));
+    }
+
+    fireEvent.click(screen.getByRole('button', { name: 'Back to Menu' }));
+    expect(onBackToMenu).toHaveBeenCalledTimes(1);
+  });
+
   it('reaches a ruined result after enough missed strikes', () => {
     const clock = createManualClock();
     render(<SweetSpotScreen clock={clock} />);
