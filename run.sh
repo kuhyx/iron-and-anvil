@@ -44,10 +44,10 @@ main() {
     fi
 
     echo "Building the game..."
-    npm run build
+    pnpm run build
 
     echo "Starting preview server on http://localhost:${PORT} ..."
-    npm run preview -- --port "$PORT" --strictPort --host 127.0.0.1 &
+    pnpm run preview -- --port "$PORT" --strictPort --host 127.0.0.1 &
     PREVIEW_PID=$!
 
     wait_for_port

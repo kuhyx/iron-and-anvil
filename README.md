@@ -19,9 +19,9 @@ they can be compared side by side before committing to one for the full game.
 ## Develop
 
 ```sh
-npm install
-npm run dev        # dev server with HMR
-npm run check       # lint + typecheck + tests with 100% coverage
+pnpm install
+pnpm run dev        # dev server with HMR
+pnpm run check       # lint + typecheck + tests with 100% coverage
 ```
 
 ## Layout

@@ -27,12 +27,17 @@ main() {
 
     ensure_pacman_pkg node nodejs
     ensure_pacman_pkg npm npm
+    # pnpm, not npm: this project depends on @kuhyx/ts-core, a subdirectory of
+    # the kuhyx/utils monorepo, and npm cannot install a subdirectory of a git
+    # repo -- it ignores the `&path:` key and fails looking for package.json at
+    # the repo root.
+    ensure_pacman_pkg pnpm pnpm
 
     echo "Installing JavaScript dependencies..."
-    if [[ -f package-lock.json ]]; then
-        npm ci
+    if [[ -f pnpm-lock.yaml ]]; then
+        pnpm install --frozen-lockfile
     else
-        npm install
+        pnpm install
     fi
 
     echo "Done. Run the game with ./run.sh"
