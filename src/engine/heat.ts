@@ -1,12 +1,18 @@
 import type { HeatBand, HeatColor } from './types';
 
-/** Ambient temperature the workpiece cools toward when not being fueled. */
+/**
+Ambient temperature the workpiece cools toward when not being fueled.
+*/
 export const AMBIENT_C = 20;
 
-/** Above this, the workpiece is overheating and starts to burn/oxidize. */
+/**
+Above this, the workpiece is overheating and starts to burn/oxidize.
+*/
 export const BURN_C = 1500;
 
-/** Below this (black heat), the metal is too cold to shape at all. */
+/**
+Below this (black heat), the metal is too cold to shape at all.
+*/
 export const WORKABLE_MIN_C = 550;
 
 /**
@@ -20,7 +26,9 @@ export const HEAT_BANDS: readonly HeatBand[] = [
   { color: 'white', minC: 1250, maxC: BURN_C },
 ];
 
-/** The color a bystander smith would call this temperature. */
+/**
+The color a bystander smith would call this temperature.
+*/
 export function heatColorFor(temperatureC: number): HeatColor {
   const band = HEAT_BANDS.find((b) => temperatureC >= b.minC && temperatureC < b.maxC);
   if (band) {
@@ -29,12 +37,16 @@ export function heatColorFor(temperatureC: number): HeatColor {
   return temperatureC >= BURN_C ? 'white' : 'black';
 }
 
-/** Whether the metal is hot enough to be shaped at all (above black heat). */
+/**
+Whether the metal is hot enough to be shaped at all (above black heat).
+*/
 export function isWorkable(temperatureC: number): boolean {
   return temperatureC >= WORKABLE_MIN_C;
 }
 
-/** Whether the metal has overheated to the point of burning/ruin. */
+/**
+Whether the metal has overheated to the point of burning/ruin.
+*/
 export function isBurnt(temperatureC: number): boolean {
   return temperatureC >= BURN_C;
 }

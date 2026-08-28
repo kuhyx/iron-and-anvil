@@ -3,12 +3,12 @@ import { waitFor } from '@testing-library/react';
 
 afterEach(() => {
   vi.resetModules();
-  document.body.innerHTML = '';
+  document.body.replaceChildren();
 });
 
 describe('main bootstrap', () => {
   it('throws when there is no #root element', async () => {
-    document.body.innerHTML = '';
+    document.body.replaceChildren();
     await expect(import('../../src/main')).rejects.toThrow('Missing #root element');
   });
 

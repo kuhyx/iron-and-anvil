@@ -11,9 +11,15 @@ export default defineConfig({
     include: ['tests/**/*.test.{ts,tsx}'],
     coverage: {
       provider: 'v8',
-      all: true,
       include: ['src/**/*.{ts,tsx}'],
-      exclude: ['src/**/*.d.ts', 'src/engine/types.ts', 'src/mechanics/types.ts'],
+      // src/test/** is the harness itself, not code under test. vitest 4's v8
+      // provider counts the never-called arrow bodies inside `vi.fn(() => ...)`,
+      // which put canvas-mock.ts at 50% and failed a gate about production code.
+      exclude: [
+        'src/**/*.d.ts',
+        'src/engine/types.ts',
+        'src/test/**',
+      ],
       reporter: ['text', 'html', 'lcov'],
       thresholds: {
         lines: 100,

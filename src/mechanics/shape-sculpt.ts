@@ -1,14 +1,18 @@
 import { BURN_C, WORKABLE_MIN_C, isBurnt, isWorkable } from '../engine/heat';
 import type { Workpiece } from '../engine/types';
 
-/** A blade's cross-section, as thickness (0-1) per segment along its length. */
+/**
+A blade's cross-section, as thickness (0-1) per segment along its length.
+*/
 export interface Profile {
   readonly segments: readonly number[];
 }
 
 export const SEGMENT_COUNT = 8;
 
-/** A simple knife taper: thick at the base, thin toward the tip. */
+/**
+A simple knife taper: thick at the base, thin toward the tip.
+*/
 export const TARGET_PROFILE: readonly number[] = [1, 0.9, 0.8, 0.65, 0.5, 0.35, 0.2, 0.1];
 
 const MAX_STROKE_DELTA = 0.15;
@@ -18,7 +22,9 @@ function clamp01(value: number): number {
   return Math.max(0, Math.min(1, value));
 }
 
-/** A fresh, unworked bar: every segment at full thickness. */
+/**
+A fresh, unworked bar: every segment at full thickness.
+*/
 export function createStartingProfile(): Profile {
   return { segments: Array.from({ length: SEGMENT_COUNT }, () => 1) };
 }
@@ -41,7 +47,9 @@ export interface Stroke {
   readonly temperatureC: number;
 }
 
-/** The profile after one stroke thins its target segment. */
+/**
+The profile after one stroke thins its target segment.
+*/
 export function applyStroke(profile: Profile, stroke: Stroke): Profile {
   const delta = strokeStrength(stroke.temperatureC);
   const segments = profile.segments.map((thickness, index) =>
@@ -63,7 +71,9 @@ function worstCaseTotalError(target: readonly number[]): number {
   return total || 1;
 }
 
-/** The largest total overshoot possible: every segment thinned to zero. */
+/**
+The largest total overshoot possible: every segment thinned to zero.
+*/
 function worstCaseTotalOvershoot(target: readonly number[]): number {
   let total = 0;
   for (const value of target) {
@@ -72,7 +82,9 @@ function worstCaseTotalOvershoot(target: readonly number[]): number {
   return total || 1;
 }
 
-/** 0-100: how close the profile is to the target shape overall. */
+/**
+0-100: how close the profile is to the target shape overall.
+*/
 export function progressTowardTarget(profile: Profile, target: readonly number[] = TARGET_PROFILE): number {
   let totalError = 0;
   for (const [index, thickness] of profile.segments.entries()) {
@@ -81,7 +93,9 @@ export function progressTowardTarget(profile: Profile, target: readonly number[]
   return clamp01(1 - totalError / worstCaseTotalError(target)) * 100;
 }
 
-/** 0-100: damage from thinning segments past their target (overshoot). */
+/**
+0-100: damage from thinning segments past their target (overshoot).
+*/
 export function overshootFlaw(profile: Profile, target: readonly number[] = TARGET_PROFILE): number {
   let totalOvershoot = 0;
   for (const [index, thickness] of profile.segments.entries()) {

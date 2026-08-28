@@ -25,15 +25,15 @@ export interface MeterJuggleScreenProperties {
 export function MeterJuggleScreen({ onFinish, onBackToMenu, clock = realClock }: MeterJuggleScreenProperties) {
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
   const [fueling, setFueling] = useState(false);
-  const lastElapsedReference = useRef(0);
-  const reportedReference = useRef(false);
+  const lastElapsedRef = useRef(0);
+  const reportedRef = useRef(false);
 
-  const finished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
+  const isFinished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
 
   const handleTick = useCallback(
     (elapsedMs: number) => {
-      const deltaMs = elapsedMs - lastElapsedReference.current;
-      lastElapsedReference.current = elapsedMs;
+      const deltaMs = elapsedMs - lastElapsedRef.current;
+      lastElapsedRef.current = elapsedMs;
       if (deltaMs <= 0) {
         return;
       }
@@ -50,14 +50,16 @@ export function MeterJuggleScreen({ onFinish, onBackToMenu, clock = realClock }:
     [fueling],
   );
 
-  useForgeLoop(handleTick, !finished, clock);
+  useForgeLoop(handleTick, !isFinished, clock);
 
   useEffect(() => {
-    if (finished && !reportedReference.current) {
-      reportedReference.current = true;
-      onFinish?.(workpiece);
+    if (!isFinished || reportedRef.current) {
+    	return;
     }
-  }, [finished, onFinish, workpiece]);
+
+    reportedRef.current = true;
+    onFinish?.(workpiece);
+  }, [isFinished, onFinish, workpiece]);
 
   const hammer = useCallback(() => {
     setWorkpiece((current) => applyHammer(current));
@@ -78,11 +80,11 @@ export function MeterJuggleScreen({ onFinish, onBackToMenu, clock = realClock }:
   const retry = useCallback(() => {
     setWorkpiece(startingWorkpiece());
     setFueling(false);
-    lastElapsedReference.current = 0;
-    reportedReference.current = false;
+    lastElapsedRef.current = 0;
+    reportedRef.current = false;
   }, []);
 
-  const quality = finished ? scoreQuality(workpiece) : undefined;
+  const quality = isFinished ? scoreQuality(workpiece) : undefined;
 
   return (
     <section aria-label="Meter juggling">
@@ -98,7 +100,7 @@ export function MeterJuggleScreen({ onFinish, onBackToMenu, clock = realClock }:
         <dd data-testid="flaw">{Math.round(workpiece.flaw)}</dd>
       </dl>
 
-      {!finished && (
+      {isFinished ? undefined : (
         <div>
           <button type="button" onPointerDown={startFueling} onPointerUp={stopFueling} onPointerLeave={stopFueling}>
             {fueling ? 'Fueling…' : 'Hold to Fuel'}

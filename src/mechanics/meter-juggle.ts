@@ -15,7 +15,9 @@ function clamp0to100(value: number): number {
   return Math.max(0, Math.min(100, value));
 }
 
-/** How much one Hammer tap advances shapeProgress at this temperature. */
+/**
+How much one Hammer tap advances shapeProgress at this temperature.
+*/
 export function hammerGain(temperatureC: number): number {
   if (!isWorkable(temperatureC)) {
     return 0;
@@ -24,7 +26,9 @@ export function hammerGain(temperatureC: number): number {
   return heatFraction * HAMMER_GAIN_MAX;
 }
 
-/** A Hammer tap: advances shape at the current heat, or ruins burnt metal. */
+/**
+A Hammer tap: advances shape at the current heat, or ruins burnt metal.
+*/
 export function applyHammer(workpiece: Workpiece): Workpiece {
   if (isBurnt(workpiece.temperatureC)) {
     return { ...workpiece, flaw: RUIN_FLAW };
@@ -32,7 +36,9 @@ export function applyHammer(workpiece: Workpiece): Workpiece {
   return { ...workpiece, shapeProgress: clamp0to100(workpiece.shapeProgress + hammerGain(workpiece.temperatureC)) };
 }
 
-/** A Temper tap: relieves accumulated stress by a fixed amount. */
+/**
+A Temper tap: relieves accumulated stress by a fixed amount.
+*/
 export function applyTemper(workpiece: Workpiece): Workpiece {
   return { ...workpiece, flaw: clamp0to100(workpiece.flaw - TEMPER_REDUCTION) };
 }

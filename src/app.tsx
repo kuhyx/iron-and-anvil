@@ -19,11 +19,11 @@ function App() {
       <h1>Iron and Anvil</h1>
       <p>Mechanic bake-off — choose a smithing mini-game to try.</p>
 
-      {screen === 'menu' && <ModeSelect onSelect={setScreen} />}
-      {screen === 'sweetSpot' && <SweetSpotScreen onBackToMenu={backToMenu} />}
-      {screen === 'shapeSculpt' && <ShapeSculptScreen onBackToMenu={backToMenu} />}
-      {screen === 'meterJuggle' && <MeterJuggleScreen onBackToMenu={backToMenu} />}
-      {screen === 'turnResolution' && <TurnResolutionScreen onBackToMenu={backToMenu} />}
+      {screen === 'menu' ? <ModeSelect onSelect={setScreen} /> : undefined}
+      {screen === 'sweetSpot' ? <SweetSpotScreen onBackToMenu={backToMenu} /> : undefined}
+      {screen === 'shapeSculpt' ? <ShapeSculptScreen onBackToMenu={backToMenu} /> : undefined}
+      {screen === 'meterJuggle' ? <MeterJuggleScreen onBackToMenu={backToMenu} /> : undefined}
+      {screen === 'turnResolution' ? <TurnResolutionScreen onBackToMenu={backToMenu} /> : undefined}
     </main>
   );
 }

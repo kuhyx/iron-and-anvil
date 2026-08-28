@@ -4,13 +4,21 @@ import { isBurnt, isWorkable } from '../engine/heat';
 export type StrikeJudgment = 'perfect' | 'good' | 'miss';
 
 export interface SweetSpotConfig {
-  /** How long one full sweep of the needle takes. */
+  /**
+  How long one full sweep of the needle takes.
+  */
   readonly periodMs: number;
-  /** Normalized (0-1) start of the working zone along the sweep. */
+  /**
+  Normalized (0-1) start of the working zone along the sweep.
+  */
   readonly sweetSpotStart: number;
-  /** Normalized (0-1) end of the working zone along the sweep. */
+  /**
+  Normalized (0-1) end of the working zone along the sweep.
+  */
   readonly sweetSpotEnd: number;
-  /** Fraction (0-1) of the zone's half-width counted as a "perfect" hit. */
+  /**
+  Fraction (0-1) of the zone's half-width counted as a "perfect" hit.
+  */
   readonly perfectMargin: number;
 }
 
@@ -30,10 +38,12 @@ function clamp01to100(value: number): number {
 export function needlePosition(elapsedMs: number, periodMs: number): number {
   const phase = ((elapsedMs % periodMs) + periodMs) % periodMs;
   const t = phase / periodMs;
-  return t < 0.5 ? t * 2 : (1 - t) * 2;
+  return (t < 0.5 ? t : 1 - t) * 2;
 }
 
-/** Judges a strike based on where the needle was at the moment of input. */
+/**
+Judges a strike based on where the needle was at the moment of input.
+*/
 export function judgeStrike(needlePos: number, config: SweetSpotConfig): StrikeJudgment {
   const { sweetSpotStart, sweetSpotEnd, perfectMargin } = config;
   if (needlePos < sweetSpotStart || needlePos > sweetSpotEnd) {

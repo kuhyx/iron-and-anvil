@@ -38,17 +38,17 @@ export function SweetSpotScreen({ onFinish, onBackToMenu, clock = realClock }: S
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
   const [needleOffset, setNeedleOffset] = useState(0);
   const [fueling, setFueling] = useState(false);
-  const lastElapsedReference = useRef(0);
-  const reportedReference = useRef(false);
+  const lastElapsedRef = useRef(0);
+  const reportedRef = useRef(false);
 
-  const finished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
+  const isFinished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
 
   const handleTick = useCallback(
     (elapsedMs: number) => {
       setNeedleOffset(needlePosition(elapsedMs, CONFIG.periodMs));
 
-      const deltaMs = elapsedMs - lastElapsedReference.current;
-      lastElapsedReference.current = elapsedMs;
+      const deltaMs = elapsedMs - lastElapsedRef.current;
+      lastElapsedRef.current = elapsedMs;
       if (deltaMs <= 0) {
         return;
       }
@@ -65,14 +65,16 @@ export function SweetSpotScreen({ onFinish, onBackToMenu, clock = realClock }: S
     [fueling],
   );
 
-  useForgeLoop(handleTick, !finished, clock);
+  useForgeLoop(handleTick, !isFinished, clock);
 
   useEffect(() => {
-    if (finished && !reportedReference.current) {
-      reportedReference.current = true;
-      onFinish?.(workpiece);
+    if (!isFinished || reportedRef.current) {
+    	return;
     }
-  }, [finished, onFinish, workpiece]);
+
+    reportedRef.current = true;
+    onFinish?.(workpiece);
+  }, [isFinished, onFinish, workpiece]);
 
   const strike = useCallback(() => {
     const judgment = judgeStrike(needleOffset, CONFIG);
@@ -91,11 +93,11 @@ export function SweetSpotScreen({ onFinish, onBackToMenu, clock = realClock }: S
     setWorkpiece(startingWorkpiece());
     setNeedleOffset(0);
     setFueling(false);
-    lastElapsedReference.current = 0;
-    reportedReference.current = false;
+    lastElapsedRef.current = 0;
+    reportedRef.current = false;
   }, []);
 
-  const quality = finished ? scoreQuality(workpiece) : undefined;
+  const quality = isFinished ? scoreQuality(workpiece) : undefined;
 
   return (
     <section aria-label="Sweet-spot strike">
@@ -137,7 +139,7 @@ export function SweetSpotScreen({ onFinish, onBackToMenu, clock = realClock }: S
         <dd data-testid="flaw">{Math.round(workpiece.flaw)}</dd>
       </dl>
 
-      {!finished && (
+      {isFinished ? undefined : (
         <div>
           <button type="button" onPointerDown={startFueling} onPointerUp={stopFueling} onPointerLeave={stopFueling}>
             {fueling ? 'Fueling…' : 'Hold to Fuel'}

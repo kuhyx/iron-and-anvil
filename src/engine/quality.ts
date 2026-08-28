@@ -1,10 +1,14 @@
 import type { Workpiece } from './types';
 
-/** A human-facing bucket for the final numeric score. */
+/**
+A human-facing bucket for the final numeric score.
+*/
 export type QualityGrade = 'ruined' | 'flawed' | 'sound' | 'fine';
 
 export interface QualityResult {
-  /** 0-100, higher is better. */
+  /**
+  0-100, higher is better.
+  */
   readonly score: number;
   readonly grade: QualityGrade;
 }

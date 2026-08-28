@@ -54,21 +54,21 @@ export interface ShapeSculptScreenProperties {
 }
 
 export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }: ShapeSculptScreenProperties) {
-  const canvasReference = useRef<HTMLCanvasElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [state, setState] = useState<SculptState>(startingState);
   const [fueling, setFueling] = useState(false);
-  const lastElapsedReference = useRef(0);
-  const lastStrokedSegmentReference = useRef(NO_SEGMENT);
-  const isDraggingReference = useRef(false);
-  const reportedReference = useRef(false);
+  const lastElapsedRef = useRef(0);
+  const lastStrokedSegmentRef = useRef(NO_SEGMENT);
+  const isDraggingRef = useRef(false);
+  const reportedRef = useRef(false);
 
   const { workpiece, profile } = state;
-  const finished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
+  const isFinished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
 
   const handleTick = useCallback(
     (elapsedMs: number) => {
-      const deltaMs = elapsedMs - lastElapsedReference.current;
-      lastElapsedReference.current = elapsedMs;
+      const deltaMs = elapsedMs - lastElapsedRef.current;
+      lastElapsedRef.current = elapsedMs;
       if (deltaMs <= 0) {
         return;
       }
@@ -85,10 +85,10 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
     [fueling],
   );
 
-  useForgeLoop(handleTick, !finished, clock);
+  useForgeLoop(handleTick, !isFinished, clock);
 
   useEffect(() => {
-    const context = canvasReference.current?.getContext('2d');
+    const context = canvasRef.current?.getContext('2d');
     if (!context) {
       return;
     }
@@ -98,11 +98,13 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
   }, [profile]);
 
   useEffect(() => {
-    if (finished && !reportedReference.current) {
-      reportedReference.current = true;
-      onFinish?.(workpiece);
+    if (!isFinished || reportedRef.current) {
+    	return;
     }
-  }, [finished, onFinish, workpiece]);
+
+    reportedRef.current = true;
+    onFinish?.(workpiece);
+  }, [isFinished, onFinish, workpiece]);
 
   const strikeSegment = useCallback((segmentIndex: number) => {
     setState((current) => {
@@ -118,7 +120,7 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
     (event: { currentTarget: HTMLCanvasElement; clientX: number }) => {
       const rect = event.currentTarget.getBoundingClientRect();
       const segmentIndex = segmentIndexForX(event.clientX - rect.left, rect.width);
-      lastStrokedSegmentReference.current = segmentIndex;
+      lastStrokedSegmentRef.current = segmentIndex;
       strikeSegment(segmentIndex);
     },
     [strikeSegment],
@@ -127,7 +129,7 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLCanvasElement>) => {
       event.currentTarget.setPointerCapture(event.pointerId);
-      isDraggingReference.current = true;
+      isDraggingRef.current = true;
       strokeAt(event);
     },
     [strokeAt],
@@ -135,12 +137,12 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
 
   const handlePointerMove = useCallback(
     (event: React.PointerEvent<HTMLCanvasElement>) => {
-      if (!isDraggingReference.current) {
+      if (!isDraggingRef.current) {
         return;
       }
       const rect = event.currentTarget.getBoundingClientRect();
       const segmentIndex = segmentIndexForX(event.clientX - rect.left, rect.width);
-      if (segmentIndex !== lastStrokedSegmentReference.current) {
+      if (segmentIndex !== lastStrokedSegmentRef.current) {
         strokeAt(event);
       }
     },
@@ -148,8 +150,8 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
   );
 
   const handlePointerUp = useCallback(() => {
-    isDraggingReference.current = false;
-    lastStrokedSegmentReference.current = NO_SEGMENT;
+    isDraggingRef.current = false;
+    lastStrokedSegmentRef.current = NO_SEGMENT;
   }, []);
 
   const startFueling = useCallback(() => {
@@ -163,12 +165,12 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
   const retry = useCallback(() => {
     setState(startingState());
     setFueling(false);
-    lastElapsedReference.current = 0;
-    lastStrokedSegmentReference.current = NO_SEGMENT;
-    reportedReference.current = false;
+    lastElapsedRef.current = 0;
+    lastStrokedSegmentRef.current = NO_SEGMENT;
+    reportedRef.current = false;
   }, []);
 
-  const quality = finished ? scoreQuality(workpiece) : undefined;
+  const quality = isFinished ? scoreQuality(workpiece) : undefined;
 
   return (
     <section aria-label="Shape sculpting">
@@ -176,13 +178,13 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
       <p>Hold Fuel to heat the metal, then drag across the bar to draw it out toward the outline.</p>
 
       <canvas
-        ref={canvasReference}
+        ref={canvasRef}
         width={CANVAS_WIDTH}
         height={CANVAS_HEIGHT}
         style={{ background: '#111', touchAction: 'none' }}
-        onPointerDown={finished ? undefined : handlePointerDown}
-        onPointerMove={finished ? undefined : handlePointerMove}
-        onPointerUp={finished ? undefined : handlePointerUp}
+        onPointerDown={isFinished ? undefined : handlePointerDown}
+        onPointerMove={isFinished ? undefined : handlePointerMove}
+        onPointerUp={isFinished ? undefined : handlePointerUp}
       />
 
       <dl>
@@ -194,7 +196,7 @@ export function ShapeSculptScreen({ onFinish, onBackToMenu, clock = realClock }:
         <dd data-testid="flaw">{Math.round(workpiece.flaw)}</dd>
       </dl>
 
-      {!finished && (
+      {isFinished ? undefined : (
         <button type="button" onPointerDown={startFueling} onPointerUp={stopFueling} onPointerLeave={stopFueling}>
           {fueling ? 'Fueling…' : 'Hold to Fuel'}
         </button>

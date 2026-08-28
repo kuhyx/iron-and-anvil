@@ -1,7 +1,9 @@
 import { AMBIENT_C, BURN_C, WORKABLE_MIN_C, isBurnt, isWorkable } from '../engine/heat';
 import type { Workpiece } from '../engine/types';
 
-/** The forge's achievable heat per turn never reaches burning, matching every other mechanic. */
+/**
+The forge's achievable heat per turn never reaches burning, matching every other mechanic.
+*/
 const FORGE_MAX_C = 1450;
 const HEAT_GAIN_PER_TURN = 250;
 const PASSIVE_COOL_PER_TURN = 120;
@@ -20,7 +22,9 @@ function clamp0to100(value: number): number {
   return Math.max(0, Math.min(100, value));
 }
 
-/** Every turn not spent tending the fire lets it cool by a fixed step. */
+/**
+Every turn not spent tending the fire lets it cool by a fixed step.
+*/
 function passiveCool(temperatureC: number): number {
   return Math.max(AMBIENT_C, temperatureC - PASSIVE_COOL_PER_TURN);
 }

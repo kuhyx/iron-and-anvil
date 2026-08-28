@@ -24,16 +24,18 @@ export interface TurnResolutionScreenProperties {
 
 export function TurnResolutionScreen({ onFinish, onBackToMenu }: TurnResolutionScreenProperties) {
   const [workpiece, setWorkpiece] = useState<Workpiece>(startingWorkpiece);
-  const reportedReference = useRef(false);
+  const reportedRef = useRef(false);
 
-  const finished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
+  const isFinished = workpiece.shapeProgress >= TARGET_SHAPE_PROGRESS || workpiece.flaw >= 100;
 
   useEffect(() => {
-    if (finished && !reportedReference.current) {
-      reportedReference.current = true;
-      onFinish?.(workpiece);
+    if (!isFinished || reportedRef.current) {
+    	return;
     }
-  }, [finished, onFinish, workpiece]);
+
+    reportedRef.current = true;
+    onFinish?.(workpiece);
+  }, [isFinished, onFinish, workpiece]);
 
   const takeTurn = useCallback((action: TurnAction) => {
     setWorkpiece((current) => applyTurn(current, action));
@@ -41,10 +43,10 @@ export function TurnResolutionScreen({ onFinish, onBackToMenu }: TurnResolutionS
 
   const retry = useCallback(() => {
     setWorkpiece(startingWorkpiece());
-    reportedReference.current = false;
+    reportedRef.current = false;
   }, []);
 
-  const quality = finished ? scoreQuality(workpiece) : undefined;
+  const quality = isFinished ? scoreQuality(workpiece) : undefined;
 
   return (
     <section aria-label="Turn-based resolution">
@@ -60,7 +62,7 @@ export function TurnResolutionScreen({ onFinish, onBackToMenu }: TurnResolutionS
         <dd data-testid="flaw">{Math.round(workpiece.flaw)}</dd>
       </dl>
 
-      {!finished && (
+      {isFinished ? undefined : (
         <div>
           {TURN_ACTIONS.map(({ action, label }) => (
             <button key={action} type="button" onClick={() => { takeTurn(action); }}>

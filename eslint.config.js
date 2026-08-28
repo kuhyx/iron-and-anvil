@@ -7,7 +7,7 @@ import tseslint from 'typescript-eslint';
 import unicorn from 'eslint-plugin-unicorn';
 import sonarjs from 'eslint-plugin-sonarjs';
 import vitest from '@vitest/eslint-plugin';
-import react from 'eslint-plugin-react';
+import react from '@eslint-react/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 
@@ -28,6 +28,11 @@ export default tseslint.config(
       },
     },
     rules: {
+      // `unicorn/name-replacements` and `@eslint-react`'s ref-name rule are
+      // mutually unsatisfiable for any `useRef` variable: the first rejects
+      // `ref`/`Ref` as an abbreviation, the second requires that exact suffix.
+      // Refs get their conventional React name; every other abbreviation stays banned.
+      'unicorn/name-replacements': ['error', { replacements: { ref: false } }],
       '@typescript-eslint/no-unused-vars': [
         'error',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_', caughtErrorsIgnorePattern: '^_' },
@@ -58,16 +63,16 @@ export default tseslint.config(
   {
     // React 19 UI layer: hooks correctness + modern JSX (no React-in-scope needed).
     files: ['src/ui/**/*.tsx', 'src/main.tsx'],
-    plugins: { react, 'react-hooks': reactHooks },
+    // eslint-plugin-react has been unmaintained since 2025-04 and declares
+    // `eslint: <=^9.7`; it hard-crashes on ESLint 10. @eslint-react is its
+    // maintained successor and is what konbini-67 already runs.
+    extends: [react.configs['recommended-type-checked']],
+    plugins: { 'react-hooks': reactHooks },
     languageOptions: {
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
-    settings: { react: { version: 'detect' } },
     rules: {
-      ...react.configs.flat.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      'react/react-in-jsx-scope': 'off',
-      'react/jsx-uses-react': 'off',
     },
   },
   {
