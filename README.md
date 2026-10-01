@@ -16,6 +16,9 @@ they can be compared side by side before committing to one for the full game.
 ./run.sh       # builds and opens the game in a browser
 ```
 
+Play it in the browser: https://kuhyx.itch.io/iron-and-anvil
+(publish a new build: `tools/publish_itch.sh`).
+
 ## Develop
 
 ```sh

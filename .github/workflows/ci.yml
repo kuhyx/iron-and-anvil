@@ -3,6 +3,7 @@
 #   pnpm run typecheck -> tsc --noEmit
 #   pnpm run test:cov  -> vitest, which fails below 100% coverage
 #   pnpm run build     -> tsc --noEmit && vite build
+#   tools/web_smoke.py -> the build boots in headless Chromium (itch.io)
 name: CI
 
 on:
@@ -37,8 +38,8 @@ jobs:
       - name: Lint
         run: pnpm run lint
 
-      - name: Shellcheck install.sh and run.sh
-        run: shellcheck install.sh run.sh
+      - name: Shellcheck install.sh, run.sh and tools/publish_itch.sh
+        run: shellcheck install.sh run.sh tools/publish_itch.sh
 
       - name: Typecheck
         run: pnpm run typecheck
@@ -48,3 +49,13 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      # The itch.io build: dist/ must boot in a real browser and react to a
+      # click (relative asset paths, no runtime errors). Same script as
+      # tools/publish_itch.sh runs before every push to itch.
+      - name: Web smoke test (headless Chromium)
+        run: |
+          python3 -m venv .smoke
+          .smoke/bin/pip install --quiet playwright
+          .smoke/bin/python -m playwright install --with-deps chromium
+          .smoke/bin/python tools/web_smoke.py dist --selector '#root button' --seconds 4
