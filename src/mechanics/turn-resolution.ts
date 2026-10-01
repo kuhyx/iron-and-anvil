@@ -60,8 +60,7 @@ export function applyTurn(workpiece: Workpiece, action: TurnAction): Workpiece {
   if (isBurnt(cooled)) {
     return { ...workpiece, temperatureC: cooled, flaw: RUIN_FLAW };
   }
-  if (!isWorkable(cooled)) {
-    return { ...workpiece, temperatureC: cooled, flaw: clamp0to100(workpiece.flaw + STRIKE_FLAW_IF_COLD) };
-  }
-  return { ...workpiece, temperatureC: cooled, shapeProgress: clamp0to100(workpiece.shapeProgress + strikeGain(cooled)) };
+  return isWorkable(cooled)
+    ? { ...workpiece, temperatureC: cooled, shapeProgress: clamp0to100(workpiece.shapeProgress + strikeGain(cooled)) }
+    : { ...workpiece, temperatureC: cooled, flaw: clamp0to100(workpiece.flaw + STRIKE_FLAW_IF_COLD) };
 }

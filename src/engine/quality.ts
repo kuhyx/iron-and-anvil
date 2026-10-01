@@ -28,10 +28,7 @@ function gradeFor(score: number): QualityGrade {
   if (score < FLAWED_MAX) {
     return 'flawed';
   }
-  if (score < SOUND_MAX) {
-    return 'sound';
-  }
-  return 'fine';
+  return score < SOUND_MAX ? 'sound' : 'fine';
 }
 
 /**

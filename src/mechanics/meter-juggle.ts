@@ -30,10 +30,9 @@ export function hammerGain(temperatureC: number): number {
 A Hammer tap: advances shape at the current heat, or ruins burnt metal.
 */
 export function applyHammer(workpiece: Workpiece): Workpiece {
-  if (isBurnt(workpiece.temperatureC)) {
-    return { ...workpiece, flaw: RUIN_FLAW };
-  }
-  return { ...workpiece, shapeProgress: clamp0to100(workpiece.shapeProgress + hammerGain(workpiece.temperatureC)) };
+  return isBurnt(workpiece.temperatureC)
+    ? { ...workpiece, flaw: RUIN_FLAW }
+    : { ...workpiece, shapeProgress: clamp0to100(workpiece.shapeProgress + hammerGain(workpiece.temperatureC)) };
 }
 
 /**
