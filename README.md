@@ -17,7 +17,8 @@ they can be compared side by side before committing to one for the full game.
 ```
 
 Play it in the browser: https://kuhyx.itch.io/iron-and-anvil
-(publish a new build: `tools/publish_itch.sh`).
+(publish a new build: `tools/publish_itch.sh`; `.github/workflows/deploy-itch.yml`
+does it automatically once every check on a `main` commit with game changes is green).
 
 ## Develop
 
