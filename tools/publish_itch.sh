@@ -44,7 +44,7 @@ main() {
     pnpm --dir "$REPO_ROOT" exec vite build --outDir "$OUT" --emptyOutDir
     # The title screen is plain DOM: clicking the first mode button proves the
     # bundle loaded and React handles input.
-    uv run --with playwright python "$REPO_ROOT/tools/web_smoke.py" "$OUT" \
+    uv run --no-project --with playwright python "$REPO_ROOT/tools/web_smoke.py" "$OUT" \
         --selector '#root button' --seconds 4 --shot "$OUT/../web_smoke.png"
     local version
     version="$(git -C "$REPO_ROOT" rev-parse --short HEAD)"
