@@ -16,7 +16,7 @@ readonly REPO_ROOT
 readonly TARGET="kuhyx/iron-and-anvil:html5"
 readonly BUTLER_URL="https://broth.itch.zone/butler/linux-amd64/LATEST/archive/default"
 readonly BIN_DIR="$HOME/.local/bin"
-readonly OUT="$REPO_ROOT/../iron-and-anvil_binaries/web"
+readonly OUT="$HOME/data/iron-and-anvil_binaries/web"
 DRY_RUN=0
 
 ensure_butler() {
