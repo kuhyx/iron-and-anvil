@@ -43,11 +43,11 @@ export function applyTemper(workpiece: Workpiece): Workpiece {
 }
 
 /**
- * Passive stress buildup over elapsed time while the smith's attention is
- * elsewhere: none while too cold to matter, steady while merely workable,
- * and much faster once burnt. This is the "third meter" that keeps drifting
- * whenever Heat or Hammer is getting all the attention.
- */
+Passive stress buildup over elapsed time while the smith's attention is
+elsewhere: none while too cold to matter, steady while merely workable,
+and much faster once burnt. This is the "third meter" that keeps drifting
+whenever Heat or Hammer is getting all the attention.
+*/
 export function accumulateStress(workpiece: Workpiece, elapsedMs: number): Workpiece {
   let ratePerSec = 0;
   if (isBurnt(workpiece.temperatureC)) {

@@ -11,14 +11,14 @@ import react from '@eslint-react/eslint-plugin';
 import reactHooks from 'eslint-plugin-react-hooks';
 import prettier from 'eslint-config-prettier';
 
-export default tseslint.config(
+const config = tseslint.config(
   {
     ignores: ['dist/**', 'coverage/**', 'node_modules/**'],
   },
   js.configs.recommended,
   ...tseslint.configs.strictTypeChecked,
   ...tseslint.configs.stylisticTypeChecked,
-  unicorn.configs['flat/recommended'],
+  unicorn.configs.recommended,
   sonarjs.configs.recommended,
   {
     languageOptions: {
@@ -100,3 +100,5 @@ export default tseslint.config(
   },
   prettier,
 );
+
+export default config;

@@ -3,7 +3,7 @@ import { defineConfig } from 'vitest/config';
 // 100% coverage is enforced across all of src/**, including the Canvas/RAF UI
 // layer — no exclusions for rendering code (only for genuine type-only files
 // that compile to nothing).
-export default defineConfig({
+const config = defineConfig({
   test: {
     globals: true,
     environment: 'jsdom',
@@ -30,3 +30,5 @@ export default defineConfig({
     },
   },
 });
+
+export default config;

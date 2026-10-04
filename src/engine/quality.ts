@@ -32,11 +32,11 @@ function gradeFor(score: number): QualityGrade {
 }
 
 /**
- * Final quality of a finished workpiece. Burning is not read from the
- * workpiece's current temperature here — a mechanic that lets the metal burn
- * is expected to have already recorded that as {@link Workpiece.flaw} damage
- * (via `heat.ts`'s `isBurnt`) during its own session.
- */
+Final quality of a finished workpiece. Burning is not read from the
+workpiece's current temperature here — a mechanic that lets the metal burn
+is expected to have already recorded that as {@link Workpiece.flaw} damage
+(via `heat.ts`'s `isBurnt`) during its own session.
+*/
 export function scoreQuality(workpiece: Workpiece): QualityResult {
   const score = clamp(workpiece.shapeProgress - workpiece.flaw, 0, 100);
   return { score, grade: gradeFor(score) };

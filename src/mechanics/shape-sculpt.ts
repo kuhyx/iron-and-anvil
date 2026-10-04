@@ -30,10 +30,10 @@ export function createStartingProfile(): Profile {
 }
 
 /**
- * How much a single stroke thins whichever segment it hits. Hotter metal is
- * more malleable and deforms more per stroke; below {@link WORKABLE_MIN_C}
- * the stroke does nothing at all.
- */
+How much a single stroke thins whichever segment it hits. Hotter metal is
+more malleable and deforms more per stroke; below {@link WORKABLE_MIN_C}
+the stroke does nothing at all.
+*/
 export function strokeStrength(temperatureC: number): number {
   if (!isWorkable(temperatureC)) {
     return 0;
@@ -59,10 +59,10 @@ export function applyStroke(profile: Profile, stroke: Stroke): Profile {
 }
 
 /**
- * The largest total error a profile constrained to [0,1] per segment could
- * possibly have against this target (each segment's worst case is being
- * pushed to whichever end of [0,1] is furthest from its target value).
- */
+The largest total error a profile constrained to [0,1] per segment could
+possibly have against this target (each segment's worst case is being
+pushed to whichever end of [0,1] is furthest from its target value).
+*/
 function worstCaseTotalError(target: readonly number[]): number {
   let total = 0;
   for (const value of target) {
@@ -111,10 +111,10 @@ export interface StrokeOutcome {
 }
 
 /**
- * Applies a stroke, updating both the profile and the shared Workpiece's
- * derived shapeProgress/flaw. Striking burnt metal ruins the piece outright
- * without changing the profile further.
- */
+Applies a stroke, updating both the profile and the shared Workpiece's
+derived shapeProgress/flaw. Striking burnt metal ruins the piece outright
+without changing the profile further.
+*/
 export function applyStrokeToWorkpiece(workpiece: Workpiece, profile: Profile, stroke: Stroke): StrokeOutcome {
   if (isBurnt(stroke.temperatureC)) {
     return { workpiece: { ...workpiece, flaw: RUIN_FLAW }, profile };

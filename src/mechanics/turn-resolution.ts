@@ -30,22 +30,22 @@ function passiveCool(temperatureC: number): number {
 }
 
 /**
- * How much one Strike turn advances shapeProgress at this temperature.
- * Only ever called once the caller has already confirmed the metal is
- * workable and not burnt.
- */
+How much one Strike turn advances shapeProgress at this temperature.
+Only ever called once the caller has already confirmed the metal is
+workable and not burnt.
+*/
 function strikeGain(temperatureC: number): number {
   const heatFraction = clamp01((temperatureC - WORKABLE_MIN_C) / (BURN_C - WORKABLE_MIN_C));
   return heatFraction * STRIKE_GAIN_MAX;
 }
 
 /**
- * Resolves one discrete turn. Heat raises temperature (capped, like every
- * other mechanic's forge). Strike and Fold both cost a turn of fire-tending,
- * so the fire cools passively first: Strike then advances shape if hot
- * enough (a harsh strike on metal too cold to work chips it instead), and
- * Fold relieves accumulated flaw regardless of temperature.
- */
+Resolves one discrete turn. Heat raises temperature (capped, like every
+other mechanic's forge). Strike and Fold both cost a turn of fire-tending,
+so the fire cools passively first: Strike then advances shape if hot
+enough (a harsh strike on metal too cold to work chips it instead), and
+Fold relieves accumulated flaw regardless of temperature.
+*/
 export function applyTurn(workpiece: Workpiece, action: TurnAction): Workpiece {
   if (action === 'heat') {
     return { ...workpiece, temperatureC: Math.min(workpiece.temperatureC + HEAT_GAIN_PER_TURN, FORGE_MAX_C) };

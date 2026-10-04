@@ -13,9 +13,9 @@ export interface HeatBand {
 }
 
 /**
- * The one piece of metal every mechanic acts on. All four mini-games read and
- * write this same shape so their results are comparable.
- */
+The one piece of metal every mechanic acts on. All four mini-games read and
+write this same shape so their results are comparable.
+*/
 export interface Workpiece {
   readonly temperatureC: number;
   /**

@@ -16,9 +16,9 @@ Below this (black heat), the metal is too cold to shape at all.
 export const WORKABLE_MIN_C = 550;
 
 /**
- * Ordered low-to-high heat bands, matching real smith heat-judging colors.
- * Below the first band's `minC` (black heat) the metal is too cold to work.
- */
+Ordered low-to-high heat bands, matching real smith heat-judging colors.
+Below the first band's `minC` (black heat) the metal is too cold to work.
+*/
 export const HEAT_BANDS: readonly HeatBand[] = [
   { color: 'red', minC: WORKABLE_MIN_C, maxC: 900 },
   { color: 'orange', minC: 900, maxC: 1050 },
@@ -52,10 +52,10 @@ export function isBurnt(temperatureC: number): boolean {
 }
 
 /**
- * Temperature after cooling toward {@link AMBIENT_C} for `elapsedMs`,
- * following exponential decay (never quite reaches ambient, matching how a
- * real forging keeps losing heat faster the hotter it is).
- */
+Temperature after cooling toward {@link AMBIENT_C} for `elapsedMs`,
+following exponential decay (never quite reaches ambient, matching how a
+real forging keeps losing heat faster the hotter it is).
+*/
 export function coolTemperature(
   currentC: number,
   elapsedMs: number,
@@ -67,9 +67,9 @@ export function coolTemperature(
 }
 
 /**
- * Temperature after actively fueling the forge for `elapsedMs`, rising at
- * `heatingRateCPerSec` and clamped to the forge's achievable maximum.
- */
+Temperature after actively fueling the forge for `elapsedMs`, rising at
+`heatingRateCPerSec` and clamped to the forge's achievable maximum.
+*/
 export function fuelTemperature(
   currentC: number,
   elapsedMs: number,

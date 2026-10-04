@@ -32,9 +32,9 @@ function clamp01to100(value: number): number {
 }
 
 /**
- * Needle position (0-1) at `elapsedMs`, sweeping back and forth like a
- * metronome (triangle wave: 0 -> 1 -> 0 over one `periodMs`).
- */
+Needle position (0-1) at `elapsedMs`, sweeping back and forth like a
+metronome (triangle wave: 0 -> 1 -> 0 over one `periodMs`).
+*/
 export function needlePosition(elapsedMs: number, periodMs: number): number {
   const phase = ((elapsedMs % periodMs) + periodMs) % periodMs;
   const t = phase / periodMs;
@@ -56,9 +56,9 @@ export function judgeStrike(needlePos: number, config: SweetSpotConfig): StrikeJ
 }
 
 /**
- * Applies one strike's judgment to the workpiece. Striking burnt metal ruins
- * it outright; striking metal that's too cold to work wastes the strike.
- */
+Applies one strike's judgment to the workpiece. Striking burnt metal ruins
+it outright; striking metal that's too cold to work wastes the strike.
+*/
 export function applyStrike(workpiece: Workpiece, judgment: StrikeJudgment): Workpiece {
   if (isBurnt(workpiece.temperatureC)) {
     return { ...workpiece, flaw: RUIN_FLAW };
