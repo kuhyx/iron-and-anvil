@@ -96,7 +96,7 @@ jobs:
         if: steps.gate.outputs.go == 'true' && steps.changed.outputs.deploy == 'true'
         with:
           cache: pnpm
-          node-version: "24.21.0"
+          node-version-file: .nvmrc
 
       # tools/publish_itch.sh runs the smoke test through `uv run`.
       - uses: astral-sh/setup-uv@v10.2.0

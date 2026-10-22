@@ -23,4 +23,18 @@ describe('main bootstrap', () => {
       expect(root.textContent).toContain('Iron and Anvil');
     });
   });
+
+  it('replaces the static no-JS content in #root with the game', async () => {
+    const root = document.createElement('div');
+    root.id = 'root';
+    root.innerHTML = '<main><h1>Iron and Anvil</h1><p>static no-JS page text</p></main>';
+    document.body.append(root);
+
+    await import('../../src/main');
+
+    await waitFor(() => {
+      expect(root.querySelector('button')).not.toBeNull();
+    });
+    expect(root.textContent).not.toContain('static no-JS page text');
+  });
 });
